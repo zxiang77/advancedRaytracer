@@ -36,7 +36,9 @@ public class RectangleLight extends Light {
 	 * TODO#A7: declare necessary variables 
 	 * e.g. the orthonormal basis vectors for the rect area light
 	 */
-
+	protected Vector3d u = new Vector3d();
+	protected Vector3d v = new Vector3d();
+	protected Vector3d w = new Vector3d();
 	/**
 	 * Initialize the derived view variables to prepare for using the camera.
 	 */
@@ -45,6 +47,9 @@ public class RectangleLight extends Light {
 		// 1) Set the 3 basis vectors in the orthonormal basis, 
         //    based on normalDir and upDir
         // 2) Set up the helper variables if needed
+		w = normalDir.set(normalDir).negate();
+		u = w.clone().cross(upDir);
+		v = w.clone().cross(u);
 	}
 
 	@Override
@@ -53,8 +58,17 @@ public class RectangleLight extends Light {
 		// 1. sample light source point on the rectangle area light in uniform-random fashion
 		// 2. compute the l vector, i.e. the direction the light incidents on the shading point
 		// 3. compute the distance between light point and shading point, and get attenuation
-		// 4. compute the probablity this light point is sampled, which is used for Monte-Carlo integration
+		// 4. compute the probability this light point is sampled, which is used for Monte-Carlo integration
 		// 5. write relevant info to LightSamplingRecord object
+		Vector3d randU = u.clone().mul((Math.random() - 0.5d) * this.width);
+		Vector3d randV = v.clone().mul((Math.random() - 0.5d) * this.height);
+		Vector3d randPos = randU.add(randV).add(this.position);
+		
+		Vector3d L = randPos.clone().sub(shadingPoint);
+		lRec.direction.set(L);
+		lRec.distance = L.len();
+		lRec.attenuation = L.len() * L.len();
+		lRec.probability = 1d / (this.height * this.width);
 	}
 
 	/**

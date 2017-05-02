@@ -7,6 +7,8 @@ import ray2.light.Light;
 import ray2.light.LightSamplingRecord;
 import egl.math.Color;
 import egl.math.Colord;
+import egl.math.Colorf;
+import egl.math.Vector2;
 import egl.math.Vector3d;
 
 public abstract class BRDFShader extends Shader {
@@ -43,6 +45,37 @@ public abstract class BRDFShader extends Shader {
 		//    the intersection point from the light's position.
 		// 4) Compute the color of the point using the CookTorrance shading model. Add this value
 		//    to the output.
+		Colord texColor = new Colord();
+		for (Light light : scene.getLights()) {
+			LightSamplingRecord lRec = new LightSamplingRecord();
+			light.sample(lRec, iRec.location);
+			if (!isShadowed(scene, lRec, iRec, new Ray (ray))) {
+				Vector3d L = ray.origin.clone().sub(iRec.location);
+				Vector3d V = ray.direction.clone().negate();
+				Colord outColor = new Colord();
+				evalBRDF(L, V, iRec.normal.clone(), diffuseColor, outColor);
+				texColor.add(outColor.div(lRec.probability));
+			}
+			outIntensity.set(texColor);
+		}
+		
+//		Colorf texColor = new Colorf();
+//		if (texture != null) {
+//			texColor = texture.getTexColor(new Vector2(record.texCoords));
+//			setDiffuseColor(texColor);
+//		}
+//		
+//		Vector3d outVec = new Vector3d();
+//		for (Light light: scene.getLights()) {
+//			if (!isShadowed(scene, light, record, new Ray(ray))){
+//				Vector3d d2light = (new Vector3d(light.position.clone())).sub(record.location);
+//				Vector3d n = record.normal;
+//				double r2 = d2light.clone().dot(d2light);
+//				double angle = Math.max(0d, d2light.clone().normalize().dot(n.normalize()));
+//				outVec.add((new Vector3d(light.intensity)).div(r2).mul(getDiffuseColor()).mul(angle));
+//			}
+//		}
+//		outIntensity.set((float) outVec.x, (float) outVec.y, (float) outVec.z);
 		
 	}
 

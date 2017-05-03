@@ -5,6 +5,7 @@ import ray2.Ray;
 
 import java.util.ArrayList;
 
+import egl.math.Util;
 import egl.math.Vector3d;
 import egl.math.Vector4d;
 
@@ -158,37 +159,9 @@ public class Cylinder extends Surface {
 		
 		// set center
 		this.averagePosition.set(this.tMat.mulPos(averagePosition));
-		Vector3d minBoundLocal = new Vector3d(this.center.x - radius / 2d,
-											  this.center.y - height / 2d,
-											  this.center.z - radius / 2d
-												);
-		
-		Vector3d maxBoundLocal = new Vector3d(this.center.x + radius / 2d,
-											  this.center.y + height / 2d,
-											  this.center.z + radius / 2d
-												);
-		
-		ArrayList<Vector3d> points = new ArrayList<Vector3d>();
-//		minBound, maxBound
-		points.add(this.tMat.mulPos(minBound.clone()));
-		points.add(this.tMat.mulPos(new Vector3d(minBound.x, minBound.y, maxBound.z)));
-		points.add(this.tMat.mulPos(new Vector3d(minBound.x, maxBound.y, maxBound.z)));
-		points.add(this.tMat.mulPos(new Vector3d(minBound.x, maxBound.y, minBound.z)));
-		points.add(this.tMat.mulPos(new Vector3d(maxBound.x, minBound.y, minBound.z)));
-		points.add(this.tMat.mulPos(new Vector3d(maxBound.x, minBound.y, maxBound.z)));
-		points.add(this.tMat.mulPos(new Vector3d(maxBound.x, maxBound.y, minBound.z)));
-		points.add(this.tMat.mulPos(maxBound.clone()));
-		
-		for (Vector3d v : points) {
-			minBound.x = Math.min(minBound.x, v.x);
-			maxBound.x = Math.max(maxBound.x, v.x);
-			
-			minBound.y = Math.min(minBound.y, v.y);
-			maxBound.y = Math.max(maxBound.y, v.y);
-			
-			minBound.z = Math.min(minBound.z, v.z);
-			maxBound.z = Math.max(maxBound.z, v.z);
-		}
+		Vector3d minPt = new Vector3d(this.center.x - radius / 2d, this.center.y - height / 2d, this.center.z - radius / 2d);
+		Vector3d maxPt = new Vector3d(this.center.x + radius / 2d, this.center.y + height / 2d, this.center.z + radius / 2d);
+		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, this.minBound, this.maxBound, this.averagePosition);
 	}
 
 	/**

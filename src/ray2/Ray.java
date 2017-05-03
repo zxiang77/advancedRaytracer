@@ -104,6 +104,9 @@ public class Ray {
     start = EPSILON;
     end = newEnd;
 
-
+  }
+  
+  public String toString() {
+	  return "ray.origin: " + this.origin.toString() + " ray.direction: " + this.direction.toString();
   }
 }

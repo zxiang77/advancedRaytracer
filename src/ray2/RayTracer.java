@@ -276,7 +276,7 @@ public class RayTracer {
 			return;
 
 		IntersectionRecord intersectionRecord = new IntersectionRecord();
-
+		
 		if (!scene.getFirstIntersection(intersectionRecord, ray)) {
 			if(scene.cubeMap != null)
 				scene.cubeMap.evaluate(ray.direction, outColor);
@@ -284,7 +284,7 @@ public class RayTracer {
 				outColor.set(scene.getBackColor());
 
 			return;
-		}
+		} 
 
 		Shader shader = intersectionRecord.surface.getShader();
 		shader.shade(outColor, scene, ray, intersectionRecord, depth);
@@ -303,7 +303,6 @@ public class RayTracer {
 	 */
 	public static void renderBlock(Scene scene, Image outImage, int offsetX, int offsetY, int sizeX, int sizeY) {
 
-
 		// Do some basic setup
 		Ray ray = new Ray();
 		Colord pixelColor = new Colord();
@@ -312,13 +311,13 @@ public class RayTracer {
 		// Set the camera aspect ratio to match output image
 		int width = outImage.getWidth();
 		int height = outImage.getHeight();
-
+		int depth = 1;
 		int samples = scene.getSamples();
 		double sInv = 1.0/samples;
 		double sInvD2 = sInv / 2;
 		double sInvSqr = sInv * sInv;
 		double exposure = scene.getExposure();
-
+		
 		Camera cam = scene.getCamera();
 
 		for(int x = offsetX; x < (offsetX + sizeX); x++) {
@@ -328,9 +327,22 @@ public class RayTracer {
 
 				// TODO#A7 Implement supersampling for antialiasing.
 				// Each pixel should have (samples*samples) subpixels.
-				
+				float px = (float) x - 0.5f;
+				float py = (float) y - 0.5f;
+				for (int i = 0; i < samples; i++) {
+					for (int j = 0; j < samples; j++) {
+						
+						rayColor.setZero();
+						cam.getRay(ray, (px + 0.5) / width, (py + 0.5) / height);	
+						shadeRay(rayColor, scene, ray, depth);
+//						rayColor.mul(exposure);
+						pixelColor.add(rayColor);
+						px += (sInv * sizeX);
+					}
+					py += (sInv * sizeY);
+				}
+				pixelColor.mul(sInvSqr);
 				outImage.setPixelColor(pixelColor, x, y);
-
 			}
 		}
 	}

@@ -149,8 +149,20 @@ public class Box extends Surface {
 		// averagePosition, minBound, and maxBound.
 		// Hint: The bounding box is not the same as just minPt and maxPt,
 		// because
-		// this object can be transformed by a transformation matrix.
-
+		// this object can be transformed by a transformation matrix.		
+		Vector3d minPtWorld = this.tMat.clone().mulPos(minPt);
+		Vector3d maxPtWorld = this.tMat.clone().mulPos(maxPt);
+		this.minBound = new Vector3d(
+				Math.min(minPtWorld.x, maxPtWorld.x), 
+				Math.min(minPtWorld.y, maxPtWorld.y), 
+				Math.min(minPtWorld.z, maxPtWorld.z)
+			);
+		this.maxBound = new Vector3d(
+				Math.min(minPtWorld.x, maxPtWorld.x), 
+				Math.min(minPtWorld.y, maxPtWorld.y), 
+				Math.min(minPtWorld.z, maxPtWorld.z)
+			);
+		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
 	}
 
 	public boolean intersect(IntersectionRecord outRecord, Ray ray) {

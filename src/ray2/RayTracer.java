@@ -331,15 +331,18 @@ public class RayTracer {
 				float py = (float) y - 0.5f;
 				for (int i = 0; i < samples; i++) {
 					for (int j = 0; j < samples; j++) {
-						
+						px = (x + (i + 0.5f) / samples) / width;
+						py = (y + (j + 0.5f) / samples) / height;
+						cam.getRay(ray, px, py);	
+
 						rayColor.setZero();
-						cam.getRay(ray, (px + 0.5) / width, (py + 0.5) / height);	
+//						cam.getRay(ray, (px + 0.5) / width, (py + 0.5) / height);	
 						shadeRay(rayColor, scene, ray, depth);
-//						rayColor.mul(exposure);
+						rayColor.mul(exposure);
 						pixelColor.add(rayColor);
-						px += (sInv * sizeX);
+						px += sInv;
 					}
-					py += (sInv * sizeY);
+					py += sInv;
 				}
 				pixelColor.mul(sInvSqr);
 				outImage.setPixelColor(pixelColor, x, y);

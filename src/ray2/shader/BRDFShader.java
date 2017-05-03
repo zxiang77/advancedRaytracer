@@ -9,6 +9,7 @@ import egl.math.Color;
 import egl.math.Colord;
 import egl.math.Colorf;
 import egl.math.Vector2;
+import egl.math.Vector2d;
 import egl.math.Vector3d;
 
 public abstract class BRDFShader extends Shader {
@@ -45,22 +46,24 @@ public abstract class BRDFShader extends Shader {
 		//    the intersection point from the light's position.
 		// 4) Compute the color of the point using the CookTorrance shading model. Add this value
 		//    to the output.
-//		System.out.println("------------------------------BRDF shader");
 		Colord texColor = new Colord();
+		if (texture != null) {
+			texColor = texture.getTexColor(new Vector2d(iRec.texCoords));
+			setDiffuseColor(texColor);
+		}
+		
 		for (Light light : scene.getLights()) {
 			LightSamplingRecord lRec = new LightSamplingRecord();
 			light.sample(lRec, iRec.location);
-			if (!isShadowed(scene, lRec, iRec, new Ray (ray))) {
-				Vector3d L = ray.origin.clone().sub(iRec.location);
-				Vector3d V = ray.direction.clone().negate();
+			if (!isShadowed(scene, lRec, iRec, new Ray(ray))) {
+				Vector3d L = lRec.direction.clone().normalize();
+				Vector3d V = ray.direction.clone().negate().normalize();
+				Vector3d N = iRec.normal.clone().normalize();
 				Colord outColor = new Colord();
-				evalBRDF(L, V, iRec.normal.clone(), diffuseColor, outColor);
-				texColor.add(outColor.div(lRec.probability));
+				evalBRDF(L, V, N, diffuseColor, outColor);
+				texColor.add(outColor.mul(light.intensity).mul(lRec.attenuation).div(lRec.probability));
 			}
 			outIntensity.set((float) texColor.x, (float) texColor.y, (float) texColor.z);
-//			System.out.print("shader.BRDFShader: " + outIntensity.toString());
 		}
-		
 	}
-
 }

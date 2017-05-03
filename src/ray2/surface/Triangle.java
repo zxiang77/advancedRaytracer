@@ -26,7 +26,7 @@ public class Triangle extends Surface {
 	  public Triangle(Mesh owner, OBJFace face, Shader shader) {
 		    this.owner = owner;
 		    this.face = face;
-
+	
 		    Vector3d v0 = new Vector3d(owner.getMesh().getPosition(face,0));
 		    Vector3d v1 = new Vector3d(owner.getMesh().getPosition(face,1));
 		    Vector3d v2 = new Vector3d(owner.getMesh().getPosition(face,2));
@@ -38,7 +38,7 @@ public class Triangle extends Surface {
 		      norm = new Vector3d();
 		      norm.set(e0).cross(e1).normalize();
 		    }
-
+	
 		    a = v0.x-v1.x;
 		    b = v0.y-v1.y;
 		    c = v0.z-v1.z;
@@ -137,6 +137,24 @@ public class Triangle extends Surface {
 	public void computeBoundingBox() {
 		// TODO#A7: Compute the bounding box and store the result in
 		// averagePosition, minBound, and maxBound.
+		Vector3d v0 = new Vector3d(owner.getMesh().getPosition(face,0));
+		Vector3d v1 = new Vector3d(owner.getMesh().getPosition(face,1));
+		Vector3d v2 = new Vector3d(owner.getMesh().getPosition(face,2));
+		v0 = this.tMat.clone().mulPos(v0);
+		v1 = this.tMat.clone().mulPos(v1);
+		v2 = this.tMat.clone().mulPos(v2);
+
+		this.minBound = new Vector3d(
+				Math.min(Math.min(v0.x, v1.x), v2.x),
+				Math.min(Math.min(v0.y, v1.y), v2.y), 
+				Math.min(Math.min(v0.z, v1.z), v2.z)
+			);
+		this.maxBound = new Vector3d(
+				Math.max(Math.max(v0.x, v1.x), v2.x),
+				Math.max(Math.max(v0.y, v1.y), v2.y), 
+				Math.max(Math.max(v0.z, v1.z), v2.z)
+			);
+		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
 		
 	}
 

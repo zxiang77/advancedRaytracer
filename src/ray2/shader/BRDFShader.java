@@ -59,9 +59,10 @@ public abstract class BRDFShader extends Shader {
 				Vector3d L = lRec.direction.clone().normalize();
 				Vector3d V = ray.direction.clone().negate().normalize();
 				Vector3d N = iRec.normal.clone().normalize();
+				double cos = L.clone().dot(N);
 				Colord outColor = new Colord();
 				evalBRDF(L, V, N, diffuseColor, outColor);
-				texColor.add(outColor.mul(light.intensity).mul(lRec.attenuation).div(lRec.probability));
+				texColor.add(outColor.mul(light.intensity).mul(cos).mul(lRec.attenuation).div(lRec.probability));
 			}
 			outIntensity.set((float) texColor.x, (float) texColor.y, (float) texColor.z);
 		}

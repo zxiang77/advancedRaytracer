@@ -158,6 +158,15 @@ public class Cylinder extends Surface {
 		
 		// set center
 		this.averagePosition.set(this.tMat.mulPos(averagePosition));
+		Vector3d minBoundLocal = new Vector3d(this.center.x - radius / 2d,
+											  this.center.y - height / 2d,
+											  this.center.z - radius / 2d
+												);
+		
+		Vector3d maxBoundLocal = new Vector3d(this.center.x + radius / 2d,
+											  this.center.y + height / 2d,
+											  this.center.z + radius / 2d
+												);
 		
 		ArrayList<Vector3d> points = new ArrayList<Vector3d>();
 //		minBound, maxBound

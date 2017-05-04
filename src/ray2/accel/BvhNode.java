@@ -102,35 +102,7 @@ public class BvhNode {
 		
 		double tEnter = Math.max(tEnterX, Math.max(tEnterY, tEnterZ));
 		double tExit = Math.min(tExitX, Math.min(tExitY, tExitZ));
-//		Vector3d enter = ray.origin.clone().add(ray.direction.mul(tEnter));
-//		Vector3d exit = ray.origin.clone().add(ray.direction.mul(tExit));
-//		
-		return tEnter >= ray.start && tEnter <= ray.end 
-				&& tExit >= ray.start && tExit <= ray.end 
-				&& tExit >= tEnter;
+		return tExit >= tEnter;
 	}
 	
-//	private boolean inBox(Vector3d p) {
-//		double eps = 0.000000001;
-//		return p.x <= this.maxBound.x + eps && p.x >= this.minBound.x - eps &&
-//				p.y <= this.maxBound.y + eps && p.y >= this.minBound.y - eps &&
-//				p.z <= this.maxBound.z + eps && p.z >= this.minBound.z - eps;
-//	}
-	
-//	private boolean inX(Vector3d a, Vector3d b) {
-//		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && 
-//				a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
-//				(b.y <= this.maxBound.y && b.y >= this.minBound.y && 
-//				b.z <= this.maxBound.z && b.z >= this.minBound.z);
-//	}
-//	
-//	private boolean inY(Vector3d a, Vector3d b) {
-//		return (a.x <= this.maxBound.x && a.x >= this.minBound.x && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
-//				(b.x <= this.maxBound.x && b.x >= this.minBound.x && b.z <= this.maxBound.z && b.z >= this.minBound.z);
-//	}
-//	
-//	private boolean inZ(Vector3d a, Vector3d b) {
-//		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.x <= this.maxBound.x && a.x >= this.minBound.x) ||
-//				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.x <= this.maxBound.x && b.x >= this.minBound.x);
-//	}
 }

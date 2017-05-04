@@ -89,7 +89,7 @@ public class Ray {
    * when casting rays from surfaces.
    */
   public void makeOffsetRay() {
-
+	  
     start = EPSILON;
     end = Double.POSITIVE_INFINITY;
 

@@ -84,7 +84,6 @@ public class Util {
 			maxBound.set(maxVec(maxBound, p));
 			sum.add(p);
 		}
-		
 		averagePos.set(sum.mul(1/8d));		
 	}
 	

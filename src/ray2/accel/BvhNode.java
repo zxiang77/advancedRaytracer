@@ -102,24 +102,18 @@ public class BvhNode {
 		
 		double tEnter = Math.max(tEnterX, Math.max(tEnterY, tEnterZ));
 		double tExit = Math.min(tExitX, Math.min(tExitY, tExitZ));
-		Vector3d enter = ray.origin.clone().add(ray.direction.mul(tEnter));
-		Vector3d exit = ray.origin.clone().add(ray.direction.mul(tExit));
-		
-//		if (inBox(enter) && inBox(exit)) {
-//			System.out.println("---------------- sat ----------------");
-//		}
-//		if (inBox(exit)) {
-//			System.out.println("---------------- Exit ----------------");
-//		}
-		return inBox(enter) || inBox(exit);
+//		Vector3d enter = ray.origin.clone().add(ray.direction.mul(tEnter));
+//		Vector3d exit = ray.origin.clone().add(ray.direction.mul(tExit));
+//		
+		return tEnter > ray.start && tEnter < ray.end && tExit > ray.start && tExit < ray.end && tExit >= tEnter;
 	}
 	
-	private boolean inBox(Vector3d p) {
-		double eps = 0.000000001;
-		return p.x <= this.maxBound.x + eps && p.x >= this.minBound.x - eps &&
-				p.y <= this.maxBound.y + eps && p.y >= this.minBound.y - eps &&
-				p.z <= this.maxBound.z + eps && p.z >= this.minBound.z - eps;
-	}
+//	private boolean inBox(Vector3d p) {
+//		double eps = 0.000000001;
+//		return p.x <= this.maxBound.x + eps && p.x >= this.minBound.x - eps &&
+//				p.y <= this.maxBound.y + eps && p.y >= this.minBound.y - eps &&
+//				p.z <= this.maxBound.z + eps && p.z >= this.minBound.z - eps;
+//	}
 	
 //	private boolean inX(Vector3d a, Vector3d b) {
 //		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && 

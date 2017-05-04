@@ -69,7 +69,7 @@ public class Bvh implements AccelStruct {
 					}
 				}
 			} else {
-				intersectHelper(node.child[0], outRecord, rayIn, anyIntersection);
+				return intersectHelper(node.child[0], outRecord, rayIn, anyIntersection) ||
 				intersectHelper(node.child[1], outRecord, rayIn, anyIntersection);
 			}
 			return outRecord.t > 0;
@@ -107,15 +107,12 @@ public class Bvh implements AccelStruct {
 
 		for (int i = start; i < end; i++) {
 			Surface s = surfaces[i];
-//			System.out.println("min: " + s.getMinBound().toString());
-			System.out.println("max: " +s.getMaxBound().toString());
-
 			minBound.set(Util.minVec(minBound, s.getMinBound()));
 			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
 		}
 		
-		System.out.println("[minBound bvh]" + minBound);
-		System.out.println("[maxBound bvh]" + maxBound);
+//		System.out.println("[minBound bvh]" + minBound);
+//		System.out.println("[maxBound bvh]" + maxBound);
 
 		// ==== Step 2 ====
 		// Check for the base case. 

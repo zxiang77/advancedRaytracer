@@ -84,9 +84,9 @@ public class BvhTests {
         // Triangle
         OBJMesh md = new OBJMesh();
 
-        md.positions.add(new Vector3(-1,-1,0));
-        md.positions.add(new Vector3(1,-1,0));
-        md.positions.add(new Vector3(0,1,-1));
+        md.positions.add(new Vector3(-1f,-1f,0f));
+        md.positions.add(new Vector3(1f,-1f,0f));
+        md.positions.add(new Vector3(0f,1f,-1f));
         
         OBJFace tri1 = new OBJFace(3,true,true);
         tri1.setVertex(0, 0, 0, 0);
@@ -94,12 +94,6 @@ public class BvhTests {
         tri1.setVertex(2, 2, 0, 0);
         
         md.faces.add(tri1);
-        // IntBuffer indices = BufferUtils.createIntBuffer(3);
-        // indices.put(new int[]{0, 1, 2});
-        // md.indices = indices;
-        // md.indexCount  = 3;
-        // md.vertexCount = 3;
-        // Triangle t = new Triangle(new Mesh(md), new Vector3i(0, 1, 2), null);
         Triangle t = new Triangle(new Mesh(md), tri1, null);
         t.setTransformation(tmat, tmatInv, tmatTInv);
         
@@ -301,20 +295,9 @@ public class BvhTests {
         // Testing bvh with 1 element
         //================================================================================================
         assertTrue("A bvh tree with one element should only contain a leaf node.", bvh1.root.isLeaf());
-//        System.out.println("[maxBound]" + bvh1.root.maxBound);
-//        System.out.println("[minBound]" + bvh1.root.minBound);
-//        System.out.println("[trans]" + bvh1.root.minBound);
-//        System.out.println("[trans]" + bvh1.root);
-//        for (Surface s : bvh1.surfaces) {
-//        	System.out.println("[surfaces]" + s);
-//        	System.out.println("[tMat]" + s.tMat);
-//        }
-        
-//        System.out.println("[maxBound test]" + surfaces1[0].getMaxBound());
-//        System.out.println("[minBound test]" + surfaces1[0].getMinBound());
-//        assertTrue("Bvh1 does not contain the correct element.", 
-//                    vectorsEqual(bvh1.root.maxBound, surfaces1[0].getMaxBound()) &&
-//                    vectorsEqual(bvh1.root.minBound, surfaces1[0].getMinBound()));
+        assertTrue("Bvh1 does not contain the correct element.", 
+                    vectorsEqual(bvh1.root.maxBound, surfaces1[0].getMaxBound()) &&
+                    vectorsEqual(bvh1.root.minBound, surfaces1[0].getMinBound()));
         
         
         // Testing bvh with 20 elements
@@ -339,11 +322,6 @@ public class BvhTests {
                    (vectorsEqual(bvh20.root.child[1].minBound, new Vector3d(-1, 9, -1))  &&
                    !vectorsEqual(bvh20.root.child[0].minBound, new Vector3d(-1, 9, -1))));
         
-        System.out.println("[bvh20 root]" + bvh20.root.minBound);
-        System.out.println("[bvh20 root]" + bvh20.root.maxBound);
-        
-        System.out.println("[bvh20 child1]" + bvh20.root.child[0].maxBound);
-        System.out.println("[bvh20 child2]" + bvh20.root.child[1].maxBound);
         assertTrue("One child of bvh20 should have a maxbound <1, 20, 1>.",
                     (vectorsEqual(bvh20.root.child[0].maxBound, new Vector3d(1, 20, 1))  &&
                     !vectorsEqual(bvh20.root.child[1].maxBound, new Vector3d(1, 20, 1))) ||

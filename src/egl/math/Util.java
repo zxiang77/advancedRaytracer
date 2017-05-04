@@ -80,7 +80,7 @@ public class Util {
 		maxBound.set(p2);
 		for (Vector3d p : points) {
 			minBound.set(minVec(minBound, p));
-			minBound.set(maxVec(maxBound, p));
+			maxBound.set(maxVec(maxBound, p));
 		}
 		averagePos.set(minBound.clone().add(maxBound).mul(1/2d));		
 	}

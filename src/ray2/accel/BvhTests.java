@@ -90,8 +90,8 @@ public class BvhTests {
         
         OBJFace tri1 = new OBJFace(3,true,true);
         tri1.setVertex(0, 0, 0, 0);
-        tri1.setVertex(1, 0, 0, 0);
-        tri1.setVertex(2, 0, 0, 0);
+        tri1.setVertex(1, 1, 0, 0);
+        tri1.setVertex(2, 2, 0, 0);
         
         md.faces.add(tri1);
         // IntBuffer indices = BufferUtils.createIntBuffer(3);
@@ -102,7 +102,9 @@ public class BvhTests {
         // Triangle t = new Triangle(new Mesh(md), new Vector3i(0, 1, 2), null);
         Triangle t = new Triangle(new Mesh(md), tri1, null);
         t.setTransformation(tmat, tmatInv, tmatTInv);
-        
+        for (int i = bvh1.root.surfaceIndexStart; i < bvh1.root.surfaceIndexEnd; i++) {
+        	System.out.println("[bvh1 surface "+ i + "]" +bvh1.surfaces[i]);
+        }
         assertTrue("Triangle with identity transform:\n"
                 + "verts:\n"
                 + "<-1, -1, 0>,\n"
@@ -304,6 +306,8 @@ public class BvhTests {
         assertTrue("Bvh1 does not contain the correct element.", 
                     vectorsEqual(bvh1.root.maxBound, surfaces1[0].getMaxBound()) &&
                     vectorsEqual(bvh1.root.minBound, surfaces1[0].getMinBound()));
+        
+        
         
         
         // Testing bvh with 20 elements

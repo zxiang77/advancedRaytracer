@@ -17,7 +17,7 @@ import ray2.surface.Surface;
  */
 public class Bvh implements AccelStruct {   
 	/** A shared surfaces array that will be used across every node in the tree. */
-	private Surface[] surfaces;
+	public Surface[] surfaces;
 
 	/** A comparator class that can sort surfaces by x, y, or z coordinate.
 	 *  See the subclass declaration below for details.
@@ -68,7 +68,7 @@ public class Bvh implements AccelStruct {
 			}
 			
 			for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
-				surfaces[i].intersect(outRecord, rayIn);
+				if (surfaces[i].intersect(outRecord, rayIn));// rayIn.makeOffsetSegment(outRecord.t);
 			}
 			return outRecord.t > 0;
 		}

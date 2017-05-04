@@ -87,26 +87,24 @@ public class BvhNode {
 		// looks like the tmp is not necessary -- no need to have it ordered
 		double tEnterXtmp = (this.minBound.x - ray.origin.x) / ray.direction.x;
 		double tExitXtmp = (this.maxBound.x - ray.origin.x) / ray.direction.x;
-		double tEnterX = Math.min(tEnterXtmp, tExitXtmp);
-		double tExitX = Math.max(tEnterXtmp, tExitXtmp);
-		Vector3d enterX = ray.origin.clone().add(ray.direction.mul(tEnterX));
-		Vector3d exitX = ray.origin.clone().add(ray.direction.mul(tExitX));
-		boolean intersectX = inX(enterX, exitX);
-		
+//		double tEnterX = Math.min(tEnterXtmp, tExitXtmp);
+//		double tExitX = Math.max(tEnterXtmp, tExitXtmp);
+		Vector3d enterX = ray.origin.clone().add(ray.direction.mul(tEnterXtmp));
+		Vector3d exitX = ray.origin.clone().add(ray.direction.mul(tExitXtmp));
 		
 		double tEnterYtmp = (this.minBound.y - ray.origin.y) / ray.direction.y;
 		double tExitYtmp = (this.maxBound.y - ray.origin.y) / ray.direction.y;
-		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
-		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
-		Vector3d enterY = ray.origin.clone().add(ray.direction.mul(tEnterY));
-		Vector3d exitY = ray.origin.clone().add(ray.direction.mul(tExitY));
+//		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
+//		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
+		Vector3d enterY = ray.origin.clone().add(ray.direction.mul(tEnterYtmp));
+		Vector3d exitY = ray.origin.clone().add(ray.direction.mul(tExitYtmp));
 		
 		double tEnterZtmp = (this.minBound.z - ray.origin.z) / ray.direction.z;
 		double tExitZtmp = (this.maxBound.z - ray.origin.z) / ray.direction.z;
-		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);
-		double tExitZ = Math.max(tEnterZtmp, tExitZtmp);
-		Vector3d enterZ = ray.origin.clone().add(ray.direction.mul(tEnterZ));
-		Vector3d exitZ = ray.origin.clone().add(ray.direction.mul(tExitZ));
+//		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);
+//		double tExitZ = Math.max(tEnterZtmp, tExitZtmp);
+		Vector3d enterZ = ray.origin.clone().add(ray.direction.mul(tEnterZtmp));
+		Vector3d exitZ = ray.origin.clone().add(ray.direction.mul(tExitZtmp));
 		
 		return inX(enterX, exitX) || inY(enterY, exitY) || inZ(enterZ, exitZ);
 	}

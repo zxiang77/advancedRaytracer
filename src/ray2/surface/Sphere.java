@@ -111,11 +111,15 @@ public class Sphere extends Surface {
 		// TODO#A7: Compute the bounding box and store the result in
 		// averagePosition, minBound, and maxBound.
 		Vector3d rVec = new Vector3d(this.radius, this.radius, this.radius);
-		Vector3d minPt = this.center.clone().sub(rVec);
-		Vector3d maxPt = this.center.clone().add(rVec);
+		Vector3d minPt = this.center.clone().sub(this.radius);
+		Vector3d maxPt = this.center.clone().add(this.radius);
 		Vector3d minOut = new Vector3d();
 		Vector3d maxOut = new Vector3d();
 		Vector3d avgOut = new Vector3d();
+		
+//		System.out.println("[center]" + this.center);
+//		System.out.println("[radius]" + this.radius);
+		
 		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, minOut, maxOut, avgOut);
 		this.minBound = minOut;
 		this.maxBound = maxOut;

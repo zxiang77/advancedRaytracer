@@ -114,14 +114,9 @@ public class Bvh implements AccelStruct {
 
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
-		
-		if (widestDim == 0) {
-			Arrays.sort(surfaces, start, end, new SurfaceXComparator());
-		} else if (widestDim == 1) {
-			Arrays.sort(surfaces, start, end, new SurfaceYComparator());
-		} else {
-			Arrays.sort(surfaces, start, end, new SurfaceZComparator());
-		}
+		MyComparator comp = new MyComparator();
+		comp.setIndex(widestDim);
+		Arrays.sort(surfaces, start, end, comp);
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.

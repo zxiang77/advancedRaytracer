@@ -17,7 +17,7 @@ import ray2.surface.Surface;
  */
 public class Bvh implements AccelStruct {   
 	/** A shared surfaces array that will be used across every node in the tree. */
-	private Surface[] surfaces;
+	public Surface[] surfaces;
 
 	/** A comparator class that can sort surfaces by x, y, or z coordinate.
 	 *  See the subclass declaration below for details.
@@ -121,7 +121,8 @@ public class Bvh implements AccelStruct {
 			minBound.set(Util.minVec(minBound, s.getMinBound()));
 			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
 		}
-		
+		System.out.println("[minBound bvh]" + minBound);
+		System.out.println("[maxBound bvh]" + maxBound);
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
@@ -135,7 +136,7 @@ public class Bvh implements AccelStruct {
 		double dx = maxBound.x - minBound.x;
 		double dy = maxBound.y - minBound.y;
 		double dz = maxBound.z - minBound.z;
-		int widestDim = (dx > dy && dx > dz) ? 0 : (dy > dz ? 1 : 2);
+		int widestDim = (dx > dy && dx > dz) ? 0 : dy > dz ? 1 : 2;
 
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.

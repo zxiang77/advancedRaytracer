@@ -161,7 +161,13 @@ public class Cylinder extends Surface {
 		this.averagePosition.set(this.tMat.mulPos(averagePosition));
 		Vector3d minPt = new Vector3d(this.center.x - radius / 2d, this.center.y - height / 2d, this.center.z - radius / 2d);
 		Vector3d maxPt = new Vector3d(this.center.x + radius / 2d, this.center.y + height / 2d, this.center.z + radius / 2d);
-		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, this.minBound, this.maxBound, this.averagePosition);
+		Vector3d minOut = new Vector3d();
+		Vector3d maxOut = new Vector3d();
+		Vector3d avgOut = new Vector3d();
+		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, minOut, maxOut, avgOut);
+		this.minBound = minOut;
+		this.maxBound = maxOut;
+		this.averagePosition = avgOut;	
 	}
 
 	/**

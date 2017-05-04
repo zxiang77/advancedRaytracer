@@ -113,7 +113,13 @@ public class Sphere extends Surface {
 		Vector3d rVec = new Vector3d(this.radius, this.radius, this.radius);
 		Vector3d minPt = this.center.clone().sub(rVec);
 		Vector3d maxPt = this.center.clone().add(rVec);
-		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, this.minBound, this.maxBound, this.averagePosition);
+		Vector3d minOut = new Vector3d();
+		Vector3d maxOut = new Vector3d();
+		Vector3d avgOut = new Vector3d();
+		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, minOut, maxOut, avgOut);
+		this.minBound = minOut;
+		this.maxBound = maxOut;
+		this.averagePosition = avgOut;	
 	}
 
 	/**

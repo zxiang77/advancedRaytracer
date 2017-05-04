@@ -4,9 +4,6 @@ package ray2.accel;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import egl.math.SurfaceXComparator;
-import egl.math.SurfaceYComparator;
-import egl.math.SurfaceZComparator;
 import egl.math.Util;
 import egl.math.Vector3d;
 import ray2.IntersectionRecord;

@@ -8,7 +8,9 @@ import ray2.IntersectionRecord;
 import ray2.Ray;
 import egl.math.Vector3d;
 import egl.math.Vector3;
+import egl.math.Matrix4d;
 import egl.math.Vector2;
+import egl.math.Util;
 
 /**
  * A class that represents an Axis-Aligned box. When the scene is built, the Box
@@ -150,19 +152,7 @@ public class Box extends Surface {
 		// Hint: The bounding box is not the same as just minPt and maxPt,
 		// because
 		// this object can be transformed by a transformation matrix.		
-		Vector3d minPtWorld = this.tMat.clone().mulPos(minPt);
-		Vector3d maxPtWorld = this.tMat.clone().mulPos(maxPt);
-		this.minBound = new Vector3d(
-				Math.min(minPtWorld.x, maxPtWorld.x), 
-				Math.min(minPtWorld.y, maxPtWorld.y), 
-				Math.min(minPtWorld.z, maxPtWorld.z)
-			);
-		this.maxBound = new Vector3d(
-				Math.min(minPtWorld.x, maxPtWorld.x), 
-				Math.min(minPtWorld.y, maxPtWorld.y), 
-				Math.min(minPtWorld.z, maxPtWorld.z)
-			);
-		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
+		Util.getTransformedBoundingBox(this.minPt, this.maxPt, this.tMat, this.minBound, this.maxBound, this.averagePosition);
 	}
 
 	public boolean intersect(IntersectionRecord outRecord, Ray ray) {

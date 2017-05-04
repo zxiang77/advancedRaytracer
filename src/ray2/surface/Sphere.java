@@ -2,6 +2,7 @@ package ray2.surface;
 
 import ray2.IntersectionRecord;
 import ray2.Ray;
+import egl.math.Util;
 import egl.math.Vector3d;
 
 /**
@@ -112,19 +113,7 @@ public class Sphere extends Surface {
 		Vector3d rVec = new Vector3d(this.radius, this.radius, this.radius);
 		Vector3d minPt = this.center.clone().sub(rVec);
 		Vector3d maxPt = this.center.clone().add(rVec);
-		Vector3d minPtWorld = this.tMat.clone().mulPos(minPt);
-		Vector3d maxPtWorld = this.tMat.clone().mulPos(maxPt);
-		this.minBound = new Vector3d(
-				Math.min(minPtWorld.x, maxPtWorld.x), 
-				Math.min(minPtWorld.y, maxPtWorld.y), 
-				Math.min(minPtWorld.z, maxPtWorld.z)
-			);
-		this.maxBound = new Vector3d(
-				Math.min(minPtWorld.x, maxPtWorld.x), 
-				Math.min(minPtWorld.y, maxPtWorld.y), 
-				Math.min(minPtWorld.z, maxPtWorld.z)
-			);
-		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
+		Util.getTransformedBoundingBox(minPt, maxPt, this.tMat, this.minBound, this.maxBound, this.averagePosition);
 	}
 
 	/**

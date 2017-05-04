@@ -110,6 +110,17 @@ public class Sphere extends Surface {
 	public void computeBoundingBox() {
 		// TODO#A7: Compute the bounding box and store the result in
 		// averagePosition, minBound, and maxBound.
+//		this.averagePosition = this.tMat.mulPos(this.center.clone());
+//		Vector3d rad = new Vector3d(this.radius, 0, 0);
+//		System.out.println("[radius old]" + this.radius);
+//		System.out.println("[center old]" + this.center);
+//		double newRad = this.tMat.mulDir(rad).len();
+//		
+//		this.minBound = this.averagePosition.clone().add(-newRad);
+//		this.maxBound = this.averagePosition.clone().add(newRad);
+//		System.out.println("[minBound new]" + minBound);
+//		System.out.println("[maxBound new]" + maxBound);
+		
 		Vector3d rVec = new Vector3d(this.radius, this.radius, this.radius);
 		Vector3d minPt = this.center.clone().sub(rVec);
 		Vector3d maxPt = this.center.clone().add(rVec);

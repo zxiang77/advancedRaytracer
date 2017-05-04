@@ -67,14 +67,14 @@ public class Util {
 	
 	public static void getTransformedBoundingBox(Vector3d minPt, Vector3d maxPt, Matrix4d tMat,
 			Vector3d minBound, Vector3d maxBound, Vector3d averagePos) {
-		Vector3d p1 = tMat.clone().mulPos(minPt);
+		Vector3d p1 = tMat.clone().mulPos(minPt.clone());
 		Vector3d p2 = tMat.clone().mulPos(new Vector3d(minPt.x, minPt.y, maxPt.z));
 		Vector3d p3 = tMat.clone().mulPos(new Vector3d(minPt.x, maxPt.y, minPt.z));
 		Vector3d p4 = tMat.clone().mulPos(new Vector3d(minPt.x, maxPt.y, maxPt.z));
 		Vector3d p5 = tMat.clone().mulPos(new Vector3d(maxPt.x, minPt.y, minPt.z));
 		Vector3d p6 = tMat.clone().mulPos(new Vector3d(maxPt.x, minPt.y, maxPt.z));
 		Vector3d p7 = tMat.clone().mulPos(new Vector3d(maxPt.x, maxPt.y, minPt.z));
-		Vector3d p8 = tMat.clone().mulPos(maxPt);
+		Vector3d p8 = tMat.clone().mulPos(maxPt.clone());
 		Vector3d[] points = {p1, p2, p3, p4, p5, p6, p7, p8};
 		minBound.set(p1);
 		maxBound.set(p1);

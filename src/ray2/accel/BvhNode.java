@@ -84,7 +84,45 @@ public class BvhNode {
 	 */
 	public boolean intersects(Ray ray) {
 		// TODO#A7: fill in this function.
-
-		return false;
+		// looks like the tmp is not necessary -- no need to have it ordered
+		double tEnterXtmp = (this.minBound.x - ray.origin.x) / ray.direction.x;
+		double tExitXtmp = (this.maxBound.x - ray.origin.x) / ray.direction.x;
+		double tEnterX = Math.min(tEnterXtmp, tExitXtmp);
+		double tExitX = Math.max(tEnterXtmp, tExitXtmp);
+		Vector3d enterX = ray.origin.clone().add(ray.direction.mul(tEnterX));
+		Vector3d exitX = ray.origin.clone().add(ray.direction.mul(tExitX));
+		boolean intersectX = inX(enterX, exitX);
+		
+		
+		double tEnterYtmp = (this.minBound.y - ray.origin.y) / ray.direction.y;
+		double tExitYtmp = (this.maxBound.y - ray.origin.y) / ray.direction.y;
+		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
+		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
+		Vector3d enterY = ray.origin.clone().add(ray.direction.mul(tEnterY));
+		Vector3d exitY = ray.origin.clone().add(ray.direction.mul(tExitY));
+		
+		double tEnterZtmp = (this.minBound.z - ray.origin.z) / ray.direction.z;
+		double tExitZtmp = (this.maxBound.z - ray.origin.z) / ray.direction.z;
+		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);
+		double tExitZ = Math.max(tEnterZtmp, tExitZtmp);
+		Vector3d enterZ = ray.origin.clone().add(ray.direction.mul(tEnterZ));
+		Vector3d exitZ = ray.origin.clone().add(ray.direction.mul(tExitZ));
+		
+		return inX(enterX, exitX) || inY(enterY, exitY) || inZ(enterZ, exitZ);
+	}
+	
+	private boolean inX(Vector3d a, Vector3d b) {
+		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
+				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.z <= this.maxBound.z && b.z >= this.minBound.z);
+	}
+	
+	private boolean inY(Vector3d a, Vector3d b) {
+		return (a.x <= this.maxBound.x && a.x >= this.minBound.x && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
+				(b.x <= this.maxBound.x && b.x >= this.minBound.x && b.z <= this.maxBound.z && b.z >= this.minBound.z);
+	}
+	
+	private boolean inZ(Vector3d a, Vector3d b) {
+		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.x <= this.maxBound.x && a.x >= this.minBound.x) ||
+				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.x <= this.maxBound.x && b.x >= this.minBound.x);
 	}
 }

@@ -103,7 +103,7 @@ public class Util {
 		ret.z = Math.max(v1.z, v2.z);
 		return ret;
 	}
-	
+		
 	// TODOX: Move To GLProgram, Op on current
 //	public static boolean setUniform(GL2 gl, GLProgram program, String name, float f) {
 //		int loc = program.getUniformLocation(name);

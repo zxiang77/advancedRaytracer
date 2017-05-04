@@ -102,7 +102,7 @@ public class Ray {
   public void makeOffsetSegment(double newEnd) {
 
     start = EPSILON;
-    end = newEnd;
+    end = newEnd < end ? newEnd : end;
 
   }
   

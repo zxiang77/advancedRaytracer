@@ -94,7 +94,7 @@ public class BvhNode {
 		double tExitYtmp = (this.maxBound.y - ray.origin.y) / ray.direction.y;
 		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
 		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
-			
+		
 		double tEnterZtmp = (this.minBound.z - ray.origin.z) / ray.direction.z;
 		double tExitZtmp = (this.maxBound.z - ray.origin.z) / ray.direction.z;
 		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);

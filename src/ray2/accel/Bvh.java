@@ -64,14 +64,14 @@ public class Bvh implements AccelStruct {
 		if (node.isLeaf()) {
 			// intersect with surfaces
 			if (anyIntersection) {
-				for (Surface s : surfaces) {
-					if(s.intersect(outRecord, rayIn)) return true;
+				for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
+					if(surfaces[i].intersect(outRecord, rayIn)) return true;
 				}
 				return false;
 			}
 			
-			for (Surface s : surfaces) {
-				s.intersect(outRecord, rayIn);
+			for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
+				surfaces[i].intersect(outRecord, rayIn);
 			}
 			return outRecord.t > 0;
 		}

@@ -58,32 +58,21 @@ public class Bvh implements AccelStruct {
 		// TODO#A7: fill in this function.
 		// Hint: For a leaf node, use a normal linear search. Otherwise, search in the left and right children.
 		// Another hint: save time by checking if the ray intersects the node first before checking the childrens
-		if (node.isLeaf()) {
-			// intersect with surfaces
-			if (anyIntersection) {
-				for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
-					if(surfaces[i].intersect(outRecord, rayIn)) return true;
-				}
-				return false;
-			}
-			
-			for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
-				surfaces[i].intersect(outRecord, rayIn);
-			}
-			return outRecord.t > 0;
-		}
-		
+		if (node == null) {return false;}
 		if (node.intersects(rayIn)) {
-			if(node.child[0] != null) { // any intersection between children??
-				if (intersectHelper(node.child[0], outRecord, rayIn, anyIntersection)) return true;
-				else {
-					if (node.child[1] != null) {
-						return intersectHelper(node.child[1], outRecord, rayIn, anyIntersection);
+			if (node.isLeaf()) {
+				// intersect with surfaces
+				for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
+					if (surfaces[i].intersect(outRecord, rayIn)) {
+						if (anyIntersection) {return true;}
+						rayIn.makeOffsetSegment(outRecord.t);
 					}
 				}
-			} else { 
-				return intersectHelper(node.child[1], outRecord, rayIn, anyIntersection);
+			} else {
+				intersectHelper(node.child[0], outRecord, rayIn, anyIntersection);
+				intersectHelper(node.child[1], outRecord, rayIn, anyIntersection);
 			}
+			return outRecord.t > 0;
 		}
 		
 		return false;
@@ -118,9 +107,14 @@ public class Bvh implements AccelStruct {
 
 		for (int i = start; i < end; i++) {
 			Surface s = surfaces[i];
+//			System.out.println("min: " + s.getMinBound().toString());
+			System.out.println("max: " +s.getMaxBound().toString());
+
 			minBound.set(Util.minVec(minBound, s.getMinBound()));
 			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
 		}
+//		System.out.println(minBound.toString());
+		System.out.println(maxBound.toString());
 		
 		// ==== Step 2 ====
 		// Check for the base case. 
@@ -151,7 +145,6 @@ public class Bvh implements AccelStruct {
 
 		return root;
 	}
-
 }
 
 /**

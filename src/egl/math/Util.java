@@ -77,10 +77,10 @@ public class Util {
 		Vector3d p8 = tMat.clone().mulPos(maxPt);
 		Vector3d[] points = {p1, p2, p3, p4, p5, p6, p7, p8};
 		minBound.set(p1);
-		maxBound.set(p2);
+		maxBound.set(p1);
 		for (Vector3d p : points) {
 			minBound.set(minVec(minBound, p));
-			minBound.set(maxVec(maxBound, p));
+			maxBound.set(maxVec(maxBound, p));
 		}
 		averagePos.set(minBound.clone().add(maxBound).mul(1/2d));		
 	}

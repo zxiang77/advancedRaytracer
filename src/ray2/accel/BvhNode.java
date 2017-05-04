@@ -76,7 +76,7 @@ public class BvhNode {
 	{
 		return child[0] == null && child[1] == null; 
 	}
-	
+		
 	/** 
 	 * Check if the ray intersects the bounding box.
 	 * @param ray
@@ -89,40 +89,52 @@ public class BvhNode {
 		double tExitXtmp = (this.maxBound.x - ray.origin.x) / ray.direction.x;
 		double tEnterX = Math.min(tEnterXtmp, tExitXtmp);
 		double tExitX = Math.max(tEnterXtmp, tExitXtmp);
-		Vector3d enterX = ray.origin.clone().add(ray.direction.mul(tEnterX));
-		Vector3d exitX = ray.origin.clone().add(ray.direction.mul(tExitX));
-		boolean intersectX = inX(enterX, exitX);
-		
 		
 		double tEnterYtmp = (this.minBound.y - ray.origin.y) / ray.direction.y;
 		double tExitYtmp = (this.maxBound.y - ray.origin.y) / ray.direction.y;
 		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
 		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
-		Vector3d enterY = ray.origin.clone().add(ray.direction.mul(tEnterY));
-		Vector3d exitY = ray.origin.clone().add(ray.direction.mul(tExitY));
-		
+			
 		double tEnterZtmp = (this.minBound.z - ray.origin.z) / ray.direction.z;
 		double tExitZtmp = (this.maxBound.z - ray.origin.z) / ray.direction.z;
 		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);
 		double tExitZ = Math.max(tEnterZtmp, tExitZtmp);
-		Vector3d enterZ = ray.origin.clone().add(ray.direction.mul(tEnterZ));
-		Vector3d exitZ = ray.origin.clone().add(ray.direction.mul(tExitZ));
 		
-		return inX(enterX, exitX) || inY(enterY, exitY) || inZ(enterZ, exitZ);
+		double tEnter = Math.max(tEnterX, Math.max(tEnterY, tEnterZ));
+		double tExit = Math.min(tExitX, Math.min(tExitY, tExitZ));
+		Vector3d enter = ray.origin.clone().add(ray.direction.mul(tEnter));
+		Vector3d exit = ray.origin.clone().add(ray.direction.mul(tExit));
+		
+//		if (inBox(enter) && inBox(exit)) {
+//			System.out.println("---------------- sat ----------------");
+//		}
+//		if (inBox(exit)) {
+//			System.out.println("---------------- Exit ----------------");
+//		}
+		return inBox(enter) || inBox(exit);
 	}
 	
-	private boolean inX(Vector3d a, Vector3d b) {
-		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
-				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.z <= this.maxBound.z && b.z >= this.minBound.z);
+	private boolean inBox(Vector3d p) {
+		double eps = 0.000000001;
+		return p.x <= this.maxBound.x + eps && p.x >= this.minBound.x - eps &&
+				p.y <= this.maxBound.y + eps && p.y >= this.minBound.y - eps &&
+				p.z <= this.maxBound.z + eps && p.z >= this.minBound.z - eps;
 	}
 	
-	private boolean inY(Vector3d a, Vector3d b) {
-		return (a.x <= this.maxBound.x && a.x >= this.minBound.x && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
-				(b.x <= this.maxBound.x && b.x >= this.minBound.x && b.z <= this.maxBound.z && b.z >= this.minBound.z);
-	}
-	
-	private boolean inZ(Vector3d a, Vector3d b) {
-		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.x <= this.maxBound.x && a.x >= this.minBound.x) ||
-				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.x <= this.maxBound.x && b.x >= this.minBound.x);
-	}
+//	private boolean inX(Vector3d a, Vector3d b) {
+//		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && 
+//				a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
+//				(b.y <= this.maxBound.y && b.y >= this.minBound.y && 
+//				b.z <= this.maxBound.z && b.z >= this.minBound.z);
+//	}
+//	
+//	private boolean inY(Vector3d a, Vector3d b) {
+//		return (a.x <= this.maxBound.x && a.x >= this.minBound.x && a.z <= this.maxBound.z && a.z >= this.minBound.z) ||
+//				(b.x <= this.maxBound.x && b.x >= this.minBound.x && b.z <= this.maxBound.z && b.z >= this.minBound.z);
+//	}
+//	
+//	private boolean inZ(Vector3d a, Vector3d b) {
+//		return (a.y <= this.maxBound.y && a.y >= this.minBound.y && a.x <= this.maxBound.x && a.x >= this.minBound.x) ||
+//				(b.y <= this.maxBound.y && b.y >= this.minBound.y && b.x <= this.maxBound.x && b.x >= this.minBound.x);
+//	}
 }

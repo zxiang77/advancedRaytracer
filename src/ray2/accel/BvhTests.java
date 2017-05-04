@@ -90,8 +90,8 @@ public class BvhTests {
         
         OBJFace tri1 = new OBJFace(3,true,true);
         tri1.setVertex(0, 0, 0, 0);
-        tri1.setVertex(1, 0, 0, 0);
-        tri1.setVertex(2, 0, 0, 0);
+        tri1.setVertex(1, 1, 0, 0);
+        tri1.setVertex(2, 2, 0, 0);
         
         md.faces.add(tri1);
         // IntBuffer indices = BufferUtils.createIntBuffer(3);

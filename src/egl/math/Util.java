@@ -79,14 +79,26 @@ public class Util {
 		minBound.set(p1);
 		maxBound.set(p1);
 		for (Vector3d p : points) {
-			minBound.x = Math.min(minBound.x, p.x);
-			minBound.y = Math.min(minBound.y, p.y);
-			minBound.z = Math.min(minBound.z, p.z);
-			maxBound.x = Math.max(maxBound.x, p.x);
-			maxBound.y = Math.max(maxBound.y, p.y);
-			maxBound.z = Math.max(maxBound.z, p.z);
+			minBound.set(minVec(minBound, p));
+			minBound.set(maxVec(maxBound, p));
 		}
 		averagePos.set(minBound.clone().add(maxBound).mul(1/2d));		
+	}
+	
+	public static Vector3d minVec(Vector3d v1, Vector3d v2) {
+		Vector3d ret = new Vector3d();
+		ret.x = Math.min(v1.x, v2.x);
+		ret.y = Math.min(v1.y, v2.y);
+		ret.z = Math.min(v1.z, v2.z);
+		return ret;
+	}
+	
+	public static Vector3d maxVec(Vector3d v1, Vector3d v2) {
+		Vector3d ret = new Vector3d();
+		ret.x = Math.max(v1.x, v2.x);
+		ret.y = Math.max(v1.y, v2.y);
+		ret.z = Math.max(v1.z, v2.z);
+		return ret;
 	}
 	
 	// TODOX: Move To GLProgram, Op on current

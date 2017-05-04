@@ -4,6 +4,11 @@ package ray2.accel;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import egl.math.SurfaceXComparator;
+import egl.math.SurfaceYComparator;
+import egl.math.SurfaceZComparator;
+import egl.math.Util;
+import egl.math.Vector3d;
 import ray2.IntersectionRecord;
 import ray2.Ray;
 import ray2.surface.Surface;
@@ -83,21 +88,47 @@ public class Bvh implements AccelStruct {
 		// Find out the BIG bounding box enclosing all the surfaces in the range [start, end)
 		// and store them in minB and maxB.
 		// Hint: To find the bounding box for each surface, use getMinBound() and getMaxBound() */
+		Vector3d minBound = this.surfaces[start].getMinBound();
+		Vector3d maxBound = this.surfaces[start].getMaxBound();
+
+		for (int i = start; i < end; i++) {
+			Surface s = surfaces[i];
+			minBound.set(Util.minVec(minBound, s.getMinBound()));
+			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
+		}
 		
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
-
+		if (end - start <= 10) {
+			return new BvhNode(minBound, maxBound, null, null, start, end);
+		}
+		
 		// ==== Step 3 ====
 		// Figure out the widest dimension (x or y or z).
 		// If x is the widest, set widestDim = 0. If y, set widestDim = 1. If z, set widestDim = 2.
+		double dx = maxBound.x - minBound.x;
+		double dy = maxBound.y - minBound.y;
+		double dz = maxBound.z - minBound.z;
+		int widestDim = (dx > dy && dx > dz) ? 0 : (dy > dz ? 1 : 2);
 
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
+		
+		if (widestDim == 0) {
+			Arrays.sort(surfaces, start, end, new SurfaceXComparator());
+		} else if (widestDim == 1) {
+			Arrays.sort(surfaces, start, end, new SurfaceYComparator());
+		} else {
+			Arrays.sort(surfaces, start, end, new SurfaceZComparator());
+		}
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.
-		
+		BvhNode l = createTree(start, (start + end) / 2);
+		BvhNode r = createTree((start + end) / 2, end);
+		BvhNode root = new BvhNode(minBound, maxBound, l, r, start, end);
+
 		return root;
 	}
 

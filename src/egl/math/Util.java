@@ -78,11 +78,14 @@ public class Util {
 		Vector3d[] points = {p1, p2, p3, p4, p5, p6, p7, p8};
 		minBound.set(p1);
 		maxBound.set(p1);
+		Vector3d sum = new Vector3d();
 		for (Vector3d p : points) {
 			minBound.set(minVec(minBound, p));
 			maxBound.set(maxVec(maxBound, p));
+			sum.add(p);
 		}
-		averagePos.set(minBound.clone().add(maxBound).mul(1/2d));		
+		
+		averagePos.set(sum.mul(1/8d));		
 	}
 	
 	public static Vector3d minVec(Vector3d v1, Vector3d v2) {

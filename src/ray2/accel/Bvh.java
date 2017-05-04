@@ -118,6 +118,7 @@ public class Bvh implements AccelStruct {
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
 		if (end - start <= 10) {
+//			System.out.println("leave: " + minBound.toString() + " " + maxBound.toString());
 			return new BvhNode(minBound, maxBound, null, null, start, end);
 		}
 		
@@ -131,15 +132,16 @@ public class Bvh implements AccelStruct {
 
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
-		MyComparator comp = new MyComparator();
-		comp.setIndex(widestDim);
-		Arrays.sort(surfaces, start, end, comp);
+//		MyComparator comp = new MyComparator();
+		cmp.setIndex(widestDim);
+		Arrays.sort(surfaces, start, end, cmp);
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.
 		BvhNode l = createTree(start, (start + end) / 2);
 		BvhNode r = createTree((start + end) / 2, end);
 		BvhNode root = new BvhNode(minBound, maxBound, l, r, start, end);
+//		System.out.println("internal: " + minBound.toString() + " " + maxBound.toString());
 
 		return root;
 	}

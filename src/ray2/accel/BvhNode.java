@@ -105,7 +105,9 @@ public class BvhNode {
 //		Vector3d enter = ray.origin.clone().add(ray.direction.mul(tEnter));
 //		Vector3d exit = ray.origin.clone().add(ray.direction.mul(tExit));
 //		
-		return tEnter > ray.start && tEnter < ray.end && tExit > ray.start && tExit < ray.end && tExit >= tEnter;
+		return tEnter >= ray.start && tEnter <= ray.end 
+				&& tExit >= ray.start && tExit <= ray.end 
+				&& tExit >= tEnter;
 	}
 	
 //	private boolean inBox(Vector3d p) {

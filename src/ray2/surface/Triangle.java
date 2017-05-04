@@ -145,10 +145,10 @@ public class Triangle extends Surface {
 		v1 = this.tMat.clone().mulPos(v1);
 		v2 = this.tMat.clone().mulPos(v2);
 
-		this.minBound = Util.minVec(Util.minVec(v0, v1), v2);
-		this.maxBound = Util.maxVec(Util.maxVec(v0, v1), v2);
-		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
-		
+//		this.minBound = Util.minVec(Util.minVec(v0, v1), v2);
+//		this.maxBound = Util.maxVec(Util.maxVec(v0, v1), v2);
+//		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
+//		
 
 		this.minBound = new Vector3d(
 				Math.min(Math.min(v0.x, v1.x), v2.x),

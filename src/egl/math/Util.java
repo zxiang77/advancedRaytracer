@@ -102,7 +102,36 @@ public class Util {
 		ret.z = Math.max(v1.z, v2.z);
 		return ret;
 	}
+	
+	public static double cosToSin(double cos) {
+		return Math.sqrt(1 - cos * cos);
+	}
+	
+	public static double sinToCos(double sin) {
+		return Math.sqrt(1 - sin * sin);
+	}
+	
+	public static double getCos(Vector3d v1, Vector3d v2) {
+		return v1.clone().normalize().dot(v2.clone().normalize());
+	}
+	
+	public static double getR(double c1, double c2, double r1, double r2) {
+		double Fp = (r2 * c1 - r1 * c2) / (r2 * c1 + r1 * c2);
+		double Fs = (r1 * c1 - r2 * c2) / (r1 * c1 + r2 * c2);
+		return 1/2d * (Fp * Fp + Fs * Fs);
+	}
 		
+	public static Vector3d getRefracted(Vector3d V, Vector3d N, double s) {
+		Vector3d vert = N.clone().normalize().mul(getCos(V, N));
+		Vector3d hori = V.clone().normalize().sub(vert).normalize().negate();
+		vert.negate().normalize().mul(sinToCos(s));
+		hori.mul(s);
+		return vert.add(hori);
+	}
+	
+	public static Vector3d getReflected(Vector3d V, Vector3d N) {
+		return N.clone().mul(2d).mul(N.clone().dot(V)).sub(V);
+	}
 	// TODOX: Move To GLProgram, Op on current
 //	public static boolean setUniform(GL2 gl, GLProgram program, String name, float f) {
 //		int loc = program.getUniformLocation(name);

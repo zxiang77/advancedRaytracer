@@ -4,7 +4,11 @@ import ray2.RayTracer;
 import ray2.IntersectionRecord;
 import ray2.Ray;
 import ray2.Scene;
+import ray2.surface.Surface;
+
 import egl.math.Colord;
+import egl.math.Util;
+import egl.math.Vector3d;
 
 /**
  * A Phong material.
@@ -47,7 +51,45 @@ public class Glass extends Shader {
         // 2) Determine whether total internal reflection occurs.
         // 3) Compute the reflected ray and refracted ray (if total internal reflection does not occur)
         //    using Snell's law and call RayTracer.shadeRay on them to shade them
+		Vector3d Norig = record.normal.clone();
+		Vector3d V = ray.direction.clone().negate();
 
+		Colord reflectedIntensity = new Colord();
+		Colord refractedIntensity = new Colord();
+		Vector3d N;
+		double r1, r2;
+
+		double cos = Util.getCos(Norig, V);
+		double R = fresnel(Norig, V, this.refractiveIndex);
+		if (cos < 0) {
+			// ray comes from inside of the surface
+			r1 = this.refractiveIndex;
+			r2 = 1d;
+			N = Norig.clone().negate();
+		} else {
+			// ray comes from outside
+			r1 = 1d;
+			r2 = this.refractiveIndex;
+			N = Norig;
+		}
+		
+		double c1 = Util.getCos(N, V);
+		double s1 = Util.cosToSin(c1);
+		Vector3d reflected = Util.getReflected(V, N);
+		Ray reflectedRay = new Ray(record.location, reflected.normalize());
+		reflectedRay.makeOffsetRay();
+		RayTracer.shadeRay(reflectedIntensity, scene, reflectedRay, depth + 1);
+		if (s1 * r1 >= r2) {
+			// internal reflection occurs
+			outIntensity.set(reflectedIntensity);
+		} else {
+			double s2 = s1 * r1 / r2;
+			Vector3d refracted = Util.getRefracted(V, N, s2);
+			Ray refractedRay = new Ray(record.location, refracted.normalize());
+			refractedRay.makeOffsetRay();
+			RayTracer.shadeRay(refractedIntensity, scene, refractedRay, depth + 1);
+			outIntensity.set(reflectedIntensity.mul(R).add(refractedIntensity.mul(1d-R)));
+		}
 	}
 	
 }

@@ -141,30 +141,7 @@ public class Triangle extends Surface {
 		Vector3d v0 = new Vector3d(owner.getMesh().getPosition(face,0));
 		Vector3d v1 = new Vector3d(owner.getMesh().getPosition(face,1));
 		Vector3d v2 = new Vector3d(owner.getMesh().getPosition(face,2));
-<<<<<<< HEAD
-		System.out.println("[v0]"+v0);
-		System.out.println("[v1]"+v1);
-		System.out.println("[v2]"+v2);
-		this.tMat.clone().mulPos(v0);
-		this.tMat.clone().mulPos(v1);
-		this.tMat.clone().mulPos(v2);
-		System.out.println("[tMat]"+tMat);
-		
-		
-		this.minBound = new Vector3d(
-				Math.min(Math.min(v0.x, v1.x), v2.x),
-				Math.min(Math.min(v0.y, v1.y), v2.y),
-				Math.min(Math.min(v0.z, v1.z), v2.z)
-			);
-		
-		this.maxBound = new Vector3d(
-				Math.max(Math.max(v0.x, v1.x), v2.x),
-				Math.max(Math.max(v0.y, v1.y), v2.y), 
-				Math.max(Math.max(v0.z, v1.z), v2.z)
-			);
-		this.averagePosition = this.minBound.clone().add(this.maxBound).mul(1/2d);
-		
-=======
+
 		v0 = this.tMat.clone().mulPos(v0);
 		v1 = this.tMat.clone().mulPos(v1);
 		v2 = this.tMat.clone().mulPos(v2);
@@ -172,7 +149,7 @@ public class Triangle extends Surface {
 		this.minBound = Util.minVec(Util.minVec(v0, v1), v2);
 		this.maxBound = Util.maxVec(Util.maxVec(v0, v1), v2);		
 		this.averagePosition = v0.add(v1).add(v2).mul(1 / 3d);
->>>>>>> 6e6ed83319e1549658bf2612f305d68cb318de0f
+
 	}
 
 	/**

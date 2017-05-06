@@ -4,6 +4,8 @@ package ray2.accel;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import com.sun.javafx.util.Utils;
+
 import egl.math.Util;
 import egl.math.Vector3d;
 import ray2.IntersectionRecord;
@@ -129,42 +131,37 @@ public class Bvh implements AccelStruct {
 		// Find out the BIG bounding box enclosing all the surfaces in the range [start, end)
 		// and store them in minB and maxB.
 		// Hint: To find the bounding box for each surface, use getMinBound() and getMaxBound() */
-		Vector3d minBound = this.surfaces[start].getMinBound();
-		Vector3d maxBound = this.surfaces[start].getMaxBound();
-
+		Vector3d maxBound = new Vector3d(Double.MIN_VALUE);
+		Vector3d minBound = new Vector3d(Double.MAX_VALUE);
+		
 		for (int i = start; i < end; i++) {
-			Surface s = surfaces[i];
-			minBound.set(Util.minVec(minBound, s.getMinBound()));
-			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
+			maxBound.set(Util.maxVec(maxBound, surfaces[i].getMaxBound()));
+			minBound.set(Util.minVec(minBound, surfaces[i].getMinBound()));
 		}
-
+		
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
-		if (end - start <= 10) {
-			return new BvhNode(minBound, maxBound, null, null, start, end);
-		}
+//		BvhNode(Vector3d minBound, Vector3d maxBound, BvhNode leftChild, BvhNode rightChild, int start, int end) 
+		if (end - start <= 10) return new BvhNode(minBound, maxBound, null, null, start, end);
+		
 		
 		// ==== Step 3 ====
 		// Figure out the widest dimension (x or y or z).
 		// If x is the widest, set widestDim = 0. If y, set widestDim = 1. If z, set widestDim = 2.
-		double dx = maxBound.x - minBound.x;
-		double dy = maxBound.y - minBound.y;
-		double dz = maxBound.z - minBound.z;
-		int widestDim = (dx > dy && dx > dz) ? 0 : dy > dz ? 1 : 2;
+		double x = maxBound.x - minBound.x, y = maxBound.y - minBound.y, z = maxBound.z - minBound.z;
+		int widestDim = (x >= y && x >= z) ? 0 : y >= z ? 1 : 2;
 
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
+		MyComparator cmp = new MyComparator();
 		cmp.setIndex(widestDim);
 		Arrays.sort(surfaces, start, end, cmp);
-
-		// ==== Step 5 ====
-		// Recursively create left and right children.
-		BvhNode l = createTree(start, (start + end) / 2);
-		BvhNode r = createTree((start + end) / 2, end);
-		BvhNode root = new BvhNode(minBound, maxBound, l, r, start, end);
-
-		return root;
+		int mid = start + (end - start) / 2;
+		BvhNode l = createTree(start, mid);
+		BvhNode r = createTree(mid, end);
+		
+		return new BvhNode(minBound, maxBound, l, r, start, end);
 	}
 }
 

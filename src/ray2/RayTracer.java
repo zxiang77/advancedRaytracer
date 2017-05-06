@@ -282,7 +282,6 @@ public class RayTracer {
 				scene.cubeMap.evaluate(ray.direction, outColor);
 			else
 				outColor.set(scene.getBackColor());
-
 			return;
 		} 
 

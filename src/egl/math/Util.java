@@ -67,22 +67,24 @@ public class Util {
 	
 	public static void getTransformedBoundingBox(Vector3d minPt, Vector3d maxPt, Matrix4d tMat,
 			Vector3d minBound, Vector3d maxBound, Vector3d averagePos) {
-		Vector3d p1 = tMat.clone().mulPos(minPt);
+		Vector3d p1 = tMat.clone().mulPos(minPt.clone());
 		Vector3d p2 = tMat.clone().mulPos(new Vector3d(minPt.x, minPt.y, maxPt.z));
 		Vector3d p3 = tMat.clone().mulPos(new Vector3d(minPt.x, maxPt.y, minPt.z));
 		Vector3d p4 = tMat.clone().mulPos(new Vector3d(minPt.x, maxPt.y, maxPt.z));
 		Vector3d p5 = tMat.clone().mulPos(new Vector3d(maxPt.x, minPt.y, minPt.z));
 		Vector3d p6 = tMat.clone().mulPos(new Vector3d(maxPt.x, minPt.y, maxPt.z));
 		Vector3d p7 = tMat.clone().mulPos(new Vector3d(maxPt.x, maxPt.y, minPt.z));
-		Vector3d p8 = tMat.clone().mulPos(maxPt);
+		Vector3d p8 = tMat.clone().mulPos(maxPt.clone());
 		Vector3d[] points = {p1, p2, p3, p4, p5, p6, p7, p8};
 		minBound.set(p1);
-		maxBound.set(p2);
+		maxBound.set(p1);
+		Vector3d sum = new Vector3d();
 		for (Vector3d p : points) {
 			minBound.set(minVec(minBound, p));
 			maxBound.set(maxVec(maxBound, p));
+			sum.add(p);
 		}
-		averagePos.set(minBound.clone().add(maxBound).mul(1/2d));		
+		averagePos.set(sum.mul(1/8d));		
 	}
 	
 	public static Vector3d minVec(Vector3d v1, Vector3d v2) {
@@ -101,6 +103,35 @@ public class Util {
 		return ret;
 	}
 	
+	public static double cosToSin(double cos) {
+		return Math.sqrt(1 - cos * cos);
+	}
+	
+	public static double sinToCos(double sin) {
+		return Math.sqrt(1 - sin * sin);
+	}
+	
+	public static double getCos(Vector3d v1, Vector3d v2) {
+		return v1.clone().normalize().dot(v2.clone().normalize());
+	}
+	
+	public static double getR(double c1, double c2, double r1, double r2) {
+		double Fp = (r2 * c1 - r1 * c2) / (r2 * c1 + r1 * c2);
+		double Fs = (r1 * c1 - r2 * c2) / (r1 * c1 + r2 * c2);
+		return 1/2d * (Fp * Fp + Fs * Fs);
+	}
+		
+	public static Vector3d getRefracted(Vector3d V, Vector3d N, double s) {
+		Vector3d vert = N.clone().normalize().mul(getCos(V, N));
+		Vector3d hori = V.clone().normalize().sub(vert).normalize().negate();
+		vert.negate().normalize().mul(sinToCos(s));
+		hori.mul(s);
+		return vert.add(hori);
+	}
+	
+	public static Vector3d getReflected(Vector3d V, Vector3d N) {
+		return N.clone().mul(2d).mul(N.clone().dot(V)).sub(V);
+	}
 	// TODOX: Move To GLProgram, Op on current
 //	public static boolean setUniform(GL2 gl, GLProgram program, String name, float f) {
 //		int loc = program.getUniformLocation(name);

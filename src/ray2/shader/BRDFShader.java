@@ -55,7 +55,7 @@ public abstract class BRDFShader extends Shader {
 		for (Light light : scene.getLights()) {
 			LightSamplingRecord lRec = new LightSamplingRecord();
 			light.sample(lRec, iRec.location);
-			if (!isShadowed(scene, lRec, iRec, new Ray())) {
+			if (!isShadowed(scene, lRec, iRec, new Ray(ray))) {
 				Vector3d L = lRec.direction.clone().normalize();
 				Vector3d V = ray.direction.clone().negate().normalize();
 				Vector3d N = iRec.normal.clone().normalize();
@@ -64,7 +64,7 @@ public abstract class BRDFShader extends Shader {
 				evalBRDF(L, V, N, diffuseColor, outColor);
 				texColor.add(outColor.mul(light.intensity).mul(cos).mul(lRec.attenuation).div(lRec.probability));
 			} else {
-				System.out.println("shade: shadow");
+//				System.out.println("shade: shadow");
 			}
 			outIntensity.set((float) texColor.x, (float) texColor.y, (float) texColor.z);
 		}

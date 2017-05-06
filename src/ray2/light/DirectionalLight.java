@@ -20,6 +20,19 @@ public class DirectionalLight extends Light {
 	public void init() {
 		// do nothing
 	}
+
+	/**
+	 * Sample the illumination due to this light source at a given shading point.
+	 * A directional light provides illumination from a single direction; the outputs are:
+	 *
+	 *    lRec.direction is the (fixed) direction to the source
+	 *    lRec.distance is infinity
+	 *    lRec.attenuation is 1.0 because there is no falloff
+	 *    lRec.probability is 1.0 because the same direction is always chosen
+	 *
+	 * @param record the record where the output is written:
+	 * @param shadingPoint the surface point where illumination is being computed
+	 */
 	@Override
 	public void sample(LightSamplingRecord lRec, Vector3d shadingPoint) {
 		lRec.direction.set(direction);

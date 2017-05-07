@@ -333,15 +333,11 @@ public class RayTracer {
 						px = (x + (i + 0.5f) / samples) / width;
 						py = (y + (j + 0.5f) / samples) / height;
 						cam.getRay(ray, px, py);	
-
 						rayColor.setZero();
-//						cam.getRay(ray, (px + 0.5) / width, (py + 0.5) / height);	
 						shadeRay(rayColor, scene, ray, depth);
 						rayColor.mul(exposure);
 						pixelColor.add(rayColor);
-						px += sInv;
 					}
-					py += sInv;
 				}
 				pixelColor.mul(sInvSqr);
 				outImage.setPixelColor(pixelColor, x, y);

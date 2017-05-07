@@ -102,7 +102,7 @@ public class BvhNode {
 		
 		double tEnter = Math.max(tEnterX, Math.max(tEnterY, tEnterZ));
 		double tExit = Math.min(tExitX, Math.min(tExitY, tExitZ));
-		return tExit >= tEnter;
+		return tExit >= tEnter && tEnter <= ray.end && tExit >= ray.start;
 	}
 	
 }

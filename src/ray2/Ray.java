@@ -89,7 +89,7 @@ public class Ray {
    * when casting rays from surfaces.
    */
   public void makeOffsetRay() {
-	  
+
     start = EPSILON;
     end = Double.POSITIVE_INFINITY;
 
@@ -102,11 +102,8 @@ public class Ray {
   public void makeOffsetSegment(double newEnd) {
 
     start = EPSILON;
-    end = newEnd < end ? newEnd : end;
+    end = newEnd;
 
-  }
-  
-  public String toString() {
-	  return "ray.origin: " + this.origin.toString() + " ray.direction: " + this.direction.toString();
+
   }
 }

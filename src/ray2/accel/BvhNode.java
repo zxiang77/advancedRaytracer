@@ -87,21 +87,23 @@ public class BvhNode {
 		// looks like the tmp is not necessary -- no need to have it ordered
 		double tEnterXtmp = (this.minBound.x - ray.origin.x) / ray.direction.x;
 		double tExitXtmp = (this.maxBound.x - ray.origin.x) / ray.direction.x;
-		double tEnterX = Math.min(tEnterXtmp, tExitXtmp);
-		double tExitX = Math.max(tEnterXtmp, tExitXtmp);
+		double tEnterX = tEnterXtmp < tExitXtmp ? tEnterXtmp : tExitXtmp;
+		double tExitX = tEnterXtmp > tExitXtmp ? tEnterXtmp : tExitXtmp;
 		
 		double tEnterYtmp = (this.minBound.y - ray.origin.y) / ray.direction.y;
 		double tExitYtmp = (this.maxBound.y - ray.origin.y) / ray.direction.y;
-		double tEnterY = Math.min(tEnterYtmp, tExitYtmp);
-		double tExitY = Math.max(tEnterYtmp, tExitYtmp);
+		double tEnterY = tEnterYtmp < tExitYtmp ? tEnterYtmp : tExitYtmp;
+		double tExitY = tEnterYtmp > tExitYtmp ? tEnterYtmp : tExitYtmp;
 		
 		double tEnterZtmp = (this.minBound.z - ray.origin.z) / ray.direction.z;
 		double tExitZtmp = (this.maxBound.z - ray.origin.z) / ray.direction.z;
-		double tEnterZ = Math.min(tEnterZtmp, tExitZtmp);
-		double tExitZ = Math.max(tEnterZtmp, tExitZtmp);
+		double tEnterZ = tEnterZtmp < tExitZtmp ? tEnterZtmp : tExitZtmp;
+		double tExitZ = tEnterZtmp > tExitZtmp ? tEnterZtmp : tExitZtmp;
 		
-		double tEnter = Math.max(tEnterX, Math.max(tEnterY, tEnterZ));
-		double tExit = Math.min(tExitX, Math.min(tExitY, tExitZ));
+		double tEnter = tEnterY > tEnterZ ? tEnterY : tEnterZ;
+		tEnter = tEnter > tEnterX ? tEnter : tEnterX;
+		double tExit = tExitY < tExitZ ? tExitY : tExitZ;
+		tExit = tExit < tExitX ? tExit : tExitX;
 		return tExit >= tEnter && tEnter <= ray.end && tExit >= ray.start;
 	}
 	

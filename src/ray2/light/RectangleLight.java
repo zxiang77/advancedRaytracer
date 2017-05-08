@@ -47,9 +47,9 @@ public class RectangleLight extends Light {
 		// 1) Set the 3 basis vectors in the orthonormal basis, 
         //    based on normalDir and upDir
         // 2) Set up the helper variables if needed
-		this.w = this.normalDir.clone().negate().normalize();
-		this.u = this.w.clone().cross(this.w).normalize();
-		this.v = this.w.clone().cross(this.u).normalize();
+		this.w.set(this.normalDir).normalize();
+		this.u.set(this.upDir).cross(this.w).normalize();
+		this.v.set(this.w).cross(this.u).normalize();
 	}
 
 	@Override
@@ -65,8 +65,8 @@ public class RectangleLight extends Light {
 		Vector3d randPos = this.position.clone().add(randU).add(randV);
 		
 		Vector3d L = randPos.clone().sub(shadingPoint);
-		double cos = L.clone().dot(this.normalDir) / (L.len() * this.normalDir.len());
-
+		double cos = L.clone().negate().dot(this.normalDir) / (L.len() * this.normalDir.len());
+		if (cos < 0d) {cos = 0d;}
 		lRec.direction.set(L);
 		lRec.attenuation = cos / shadingPoint.distSq(randPos);
 		lRec.distance = lRec.direction.len();

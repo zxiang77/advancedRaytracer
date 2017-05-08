@@ -159,5 +159,4 @@ public class Scene {
 		return accelStruct.intersect(new IntersectionRecord(), ray, true);	
 	}
 	
-	
 }

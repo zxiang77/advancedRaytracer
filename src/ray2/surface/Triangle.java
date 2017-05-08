@@ -2,7 +2,6 @@ package ray2.surface;
 
 import ray2.IntersectionRecord;
 import ray2.Ray;
-import egl.math.Util;
 import egl.math.Vector3d;
 import ray2.shader.Shader;
 import ray2.mesh.OBJFace;
@@ -145,9 +144,9 @@ public class Triangle extends Surface {
 		v1 = this.tMat.clone().mulPos(v1);
 		v2 = this.tMat.clone().mulPos(v2);
 
-		this.minBound = Util.minVec(Util.minVec(v0, v1), v2);
-		this.maxBound = Util.maxVec(Util.maxVec(v0, v1), v2);		
-		this.averagePosition = v0.add(v1).add(v2).mul(1 / 3d);
+		this.minBound = minVec(minVec(v0, v1), v2);
+		this.maxBound = maxVec(maxVec(v0, v1), v2);		
+		this.averagePosition = v0.add(v1).add(v2).div(3d);
 	}
 
 	/**

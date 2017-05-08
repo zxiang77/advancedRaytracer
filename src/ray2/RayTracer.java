@@ -243,7 +243,7 @@ public class RayTracer {
 			offsetY = spiral.curSubY*SUB_HEIGHT;
 			sizeX = Math.min(width-offsetX,SUB_WIDTH);
 			sizeY = Math.min(height-offsetY,SUB_HEIGHT);
-
+			
 			renderBlock(scene, image, offsetX, offsetY, sizeX, sizeY);
 
 			//Update display
@@ -276,14 +276,15 @@ public class RayTracer {
 			return;
 
 		IntersectionRecord intersectionRecord = new IntersectionRecord();
-		
+
 		if (!scene.getFirstIntersection(intersectionRecord, ray)) {
 			if(scene.cubeMap != null)
 				scene.cubeMap.evaluate(ray.direction, outColor);
 			else
 				outColor.set(scene.getBackColor());
+
 			return;
-		} 
+		}
 
 		Shader shader = intersectionRecord.surface.getShader();
 		shader.shade(outColor, scene, ray, intersectionRecord, depth);
@@ -302,6 +303,7 @@ public class RayTracer {
 	 */
 	public static void renderBlock(Scene scene, Image outImage, int offsetX, int offsetY, int sizeX, int sizeY) {
 
+
 		// Do some basic setup
 		Ray ray = new Ray();
 		Colord pixelColor = new Colord();
@@ -310,13 +312,13 @@ public class RayTracer {
 		// Set the camera aspect ratio to match output image
 		int width = outImage.getWidth();
 		int height = outImage.getHeight();
-		int depth = 1;
+
 		int samples = scene.getSamples();
 		double sInv = 1.0/samples;
 		double sInvD2 = sInv / 2;
 		double sInvSqr = sInv * sInv;
 		double exposure = scene.getExposure();
-		
+
 		Camera cam = scene.getCamera();
 
 		for(int x = offsetX; x < (offsetX + sizeX); x++) {
@@ -334,13 +336,15 @@ public class RayTracer {
 						py = (y + (j + 0.5f) / samples) / height;
 						cam.getRay(ray, px, py);	
 						rayColor.setZero();
-						shadeRay(rayColor, scene, ray, depth);
+						shadeRay(rayColor, scene, ray, 1);
 						rayColor.mul(exposure);
 						pixelColor.add(rayColor);
 					}
 				}
 				pixelColor.mul(sInvSqr);
+				
 				outImage.setPixelColor(pixelColor, x, y);
+
 			}
 		}
 	}

@@ -85,4 +85,28 @@ public abstract class Shader {
 		double R = 0.5 * (Fp*Fp + Fs*Fs);
 		return R;
 	}
+	
+	protected double cosToSin(double cos) {
+		return Math.sqrt(1 - cos * cos);
+	}
+	
+	protected double sinToCos(double sin) {
+		return Math.sqrt(1 - sin * sin);
+	}
+	
+	protected double getCos(Vector3d v1, Vector3d v2) {
+		return v1.clone().normalize().dot(v2.clone().normalize());
+	}
+		
+	protected Vector3d getRefracted(Vector3d V, Vector3d N, double s) {
+		Vector3d vert = N.clone().normalize().mul(getCos(V, N));
+		Vector3d hori = V.clone().normalize().sub(vert).normalize().negate();
+		vert.negate().normalize().mul(sinToCos(s));
+		hori.mul(s);
+		return vert.add(hori);
+	}
+	
+	protected Vector3d getReflected(Vector3d V, Vector3d N) {
+		return N.clone().mul(2d).mul(N.clone().dot(V)).sub(V);
+	}
 }

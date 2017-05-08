@@ -20,6 +20,18 @@ public class PointLight extends Light {
 		// do nothing
 	}
 
+	/**
+	 * Sample the illumination due to this light source at a given shading point.
+	 * A point light provides illumination from a single direction; the outputs are:
+	 *
+	 *    lRec.direction is the direction from the shading point to the source
+	 *    lRec.distance is the distance between the shading point and the source
+	 *    lRec.attenuation is the inverse square of the distance to the source
+	 *    lRec.probability is 1.0 because the same direction is always chosen
+	 *
+	 * @param record the record where the output is written:
+	 * @param shadingPoint the surface point where illumination is being computed
+	 */
 	@Override
 	public void sample(LightSamplingRecord lRec, Vector3d shadingPoint) {
 		lRec.direction.set(position).sub(shadingPoint);

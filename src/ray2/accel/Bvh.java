@@ -4,7 +4,6 @@ package ray2.accel;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import egl.math.Util;
 import egl.math.Vector3d;
 import ray2.IntersectionRecord;
 import ray2.Ray;
@@ -40,7 +39,6 @@ public class Bvh implements AccelStruct {
 	 * @return true if and intersection is found.
 	 */
 	public boolean intersect(IntersectionRecord outRecord, Ray rayIn, boolean anyIntersection) {
-		outRecord.t = rayIn.end;
 		return intersectHelper(root, outRecord, rayIn, anyIntersection);
 	}
 	
@@ -60,7 +58,6 @@ public class Bvh implements AccelStruct {
 		// Hint: For a leaf node, use a normal linear search. Otherwise, search in the left and right children.
 		// Another hint: save time by checking if the ray intersects the node first before checking the childrens
 		if (node == null) {return false;}
-//		IntersectionRecord tmp = new IntersectionRecord();
 		if (node.intersects(rayIn)) {
 			if (node.isLeaf()) {
 				boolean ret = false;
@@ -68,10 +65,8 @@ public class Bvh implements AccelStruct {
 				for (int i = node.surfaceIndexStart; i < node.surfaceIndexEnd; i++){
 					if (surfaces[i].intersect(outRecord, rayIn)) {
 						if (anyIntersection) {return true;}
-						if (outRecord.t < rayIn.end){
-							rayIn.end = outRecord.t;
-							ret = true;
-						}
+						rayIn.end = outRecord.t;
+						ret = true;
 					}
 				}
 				return ret;
@@ -109,15 +104,15 @@ public class Bvh implements AccelStruct {
 		// Find out the BIG bounding box enclosing all the surfaces in the range [start, end)
 		// and store them in minB and maxB.
 		// Hint: To find the bounding box for each surface, use getMinBound() and getMaxBound() */
-		Vector3d minBound = new Vector3d(Double.MAX_VALUE);
-		Vector3d maxBound = new Vector3d(Double.MIN_VALUE);
+		Vector3d minBound = new Vector3d(1e100);
+		Vector3d maxBound = new Vector3d(-1e100);
 
 		for (int i = start; i < end; i++) {
 			Surface s = surfaces[i];
-			minBound.set(Util.minVec(minBound, s.getMinBound()));
-			maxBound.set(Util.maxVec(maxBound, s.getMaxBound()));
+			minBound.set(minVec(minBound, s.getMinBound()));
+			maxBound.set(maxVec(maxBound, s.getMaxBound()));
 		}
-
+		
 		// ==== Step 2 ====
 		// Check for the base case. 
 		// If the range [start, end) is small enough (e.g. less than or equal to 10), just return a new leaf node.
@@ -132,7 +127,7 @@ public class Bvh implements AccelStruct {
 		double dy = maxBound.y - minBound.y;
 		double dz = maxBound.z - minBound.z;
 		int widestDim = (dx > dy && dx > dz) ? 0 : dy > dz ? 1 : 2;
-
+		
 		// ==== Step 4 ====
 		// Sort surfaces according to the widest dimension.
 		cmp.setIndex(widestDim);
@@ -140,12 +135,31 @@ public class Bvh implements AccelStruct {
 
 		// ==== Step 5 ====
 		// Recursively create left and right children.
-		BvhNode l = createTree(start, (start + end) / 2);
-		BvhNode r = createTree((start + end) / 2, end);
+		int mid = (start + end) / 2;
+		BvhNode l = createTree(start, mid);
+		BvhNode r = createTree(mid, end);
 		BvhNode root = new BvhNode(minBound, maxBound, l, r, start, end);
 
 		return root;
 	}
+	
+
+	private Vector3d minVec(Vector3d v1, Vector3d v2) {
+		Vector3d ret = new Vector3d();
+		ret.x = v1.x < v2.x ? v1.x : v2.x;
+		ret.y = v1.y < v2.y ? v1.y : v2.y;
+		ret.z = v1.z < v2.z ? v1.z : v2.z;
+		return ret;
+	}
+	
+	private Vector3d maxVec(Vector3d v1, Vector3d v2) {
+		Vector3d ret = new Vector3d();
+		ret.x = v1.x > v2.x ? v1.x : v2.x;
+		ret.y = v1.y > v2.y ? v1.y : v2.y;
+		ret.z = v1.z > v2.z ? v1.z : v2.z;
+		return ret;
+	}
+	
 }
 
 /**

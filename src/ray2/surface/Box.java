@@ -152,13 +152,14 @@ public class Box extends Surface {
 		// Hint: The bounding box is not the same as just minPt and maxPt,
 		// because
 		// this object can be transformed by a transformation matrix.
+		Vector3d midpt = new Vector3d(minPt).add(maxPt).div(2);
 		Vector3d minOut = new Vector3d();
 		Vector3d maxOut = new Vector3d();
 		Vector3d avgOut = new Vector3d();
-		Util.getTransformedBoundingBox(this.minPt, this.maxPt, this.tMat, minOut, maxOut, avgOut);
+		getTransformedBoundingBox(this.minPt, this.maxPt, this.tMat, minOut, maxOut, avgOut);
 		this.minBound = minOut;
 		this.maxBound = maxOut;
-		this.averagePosition = avgOut;
+		this.averagePosition = tMat.mulPos(new Vector3d(midpt));
 	}
 
 	public boolean intersect(IntersectionRecord outRecord, Ray ray) {

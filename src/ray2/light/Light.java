@@ -19,6 +19,11 @@ public abstract class Light {
 	// initialization method
 	public abstract void init();
 
+	/**
+	 * Sample the illumination due to this light source at a given shading point.
+	 * @param record the record where the output is written
+	 * @param shadingPoint the surface point where illumination is being computed
+	 */
 	public abstract void sample(LightSamplingRecord record, Vector3d shadingPoint);
 		
 	/**

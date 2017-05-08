@@ -4,10 +4,7 @@ import ray2.RayTracer;
 import ray2.IntersectionRecord;
 import ray2.Ray;
 import ray2.Scene;
-import ray2.surface.Surface;
-
 import egl.math.Colord;
-import egl.math.Util;
 import egl.math.Vector3d;
 
 /**
@@ -58,24 +55,25 @@ public class Glass extends Shader {
 		Colord refractedIntensity = new Colord();
 		Vector3d N;
 		double r1, r2;
-
-		double cos = Util.getCos(Norig, V);
-		double R = fresnel(Norig, V, this.refractiveIndex);
+		double R;
+		double cos = getCos(Norig, V);
 		if (cos < 0) {
 			// ray comes from inside of the surface
 			r1 = this.refractiveIndex;
 			r2 = 1d;
 			N = Norig.clone().negate();
+			R = fresnel(N, V, 1/this.refractiveIndex);
 		} else {
 			// ray comes from outside
 			r1 = 1d;
 			r2 = this.refractiveIndex;
 			N = Norig;
+			R = fresnel(N, V, this.refractiveIndex);
 		}
-		
-		double c1 = Util.getCos(N, V);
-		double s1 = Util.cosToSin(c1);
-		Vector3d reflected = Util.getReflected(V, N);
+
+		double c1 = getCos(N, V);
+		double s1 = cosToSin(c1);
+		Vector3d reflected = getReflected(V, N);
 		Ray reflectedRay = new Ray(record.location, reflected.normalize());
 		reflectedRay.makeOffsetRay();
 		RayTracer.shadeRay(reflectedIntensity, scene, reflectedRay, depth + 1);
@@ -84,7 +82,7 @@ public class Glass extends Shader {
 			outIntensity.set(reflectedIntensity);
 		} else {
 			double s2 = s1 * r1 / r2;
-			Vector3d refracted = Util.getRefracted(V, N, s2);
+			Vector3d refracted = getRefracted(V, N, s2);
 			Ray refractedRay = new Ray(record.location, refracted.normalize());
 			refractedRay.makeOffsetRay();
 			RayTracer.shadeRay(refractedIntensity, scene, refractedRay, depth + 1);

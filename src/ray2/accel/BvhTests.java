@@ -295,10 +295,6 @@ public class BvhTests {
         // Testing bvh with 1 element
         //================================================================================================
         assertTrue("A bvh tree with one element should only contain a leaf node.", bvh1.root.isLeaf());
-        System.out.println(bvh1.root.maxBound);
-        System.out.println(surfaces1[0].getMaxBound());
-        System.out.println(bvh1.root.minBound);
-        System.out.println(surfaces1[0].getMinBound());
         assertTrue("Bvh1 does not contain the correct element.", 
                     vectorsEqual(bvh1.root.maxBound, surfaces1[0].getMaxBound()) &&
                     vectorsEqual(bvh1.root.minBound, surfaces1[0].getMinBound()));

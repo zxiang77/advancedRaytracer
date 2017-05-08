@@ -7,8 +7,6 @@ import ray2.light.Light;
 import ray2.light.LightSamplingRecord;
 import egl.math.Color;
 import egl.math.Colord;
-import egl.math.Colorf;
-import egl.math.Vector2;
 import egl.math.Vector2d;
 import egl.math.Vector3d;
 
@@ -64,11 +62,8 @@ public abstract class BRDFShader extends Shader {
 				Colord outColor = new Colord();
 				evalBRDF(L, V, N, diffuseColor, outColor);
 				outIntensity.add(outColor.mul(light.intensity).mul(cos).mul(lRec.attenuation).div(lRec.probability));
-			} else {
-				System.out.println("shade: shadow");
 			}
 		}
-//		outIntensity.set((float) outVec.x, (float) outVec.y, (float) outVec.z);
 
 	}
 }

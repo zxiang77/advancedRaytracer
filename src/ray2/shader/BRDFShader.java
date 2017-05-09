@@ -5,6 +5,7 @@ import ray2.Ray;
 import ray2.Scene;
 import ray2.light.Light;
 import ray2.light.LightSamplingRecord;
+import ray2.light.SpotLight;
 import egl.math.Color;
 import egl.math.Colord;
 import egl.math.Vector2d;
@@ -52,8 +53,10 @@ public abstract class BRDFShader extends Shader {
 		
 		outIntensity.setZero();
 		for (Light light : scene.getLights()) {
+//			System.out.println("[BRDFshader]: getting lights");
 			LightSamplingRecord lRec = new LightSamplingRecord();
 			light.sample(lRec, iRec.location);
+//			System.out.println(iRec.location);
 			if (!isShadowed(scene, lRec, iRec, new Ray())) {
 				Vector3d L = lRec.direction.clone().normalize();
 				Vector3d V = ray.direction.clone().negate().normalize();
@@ -61,7 +64,22 @@ public abstract class BRDFShader extends Shader {
 				double cos = Math.max(0, L.clone().dot(N));
 				Colord outColor = new Colord();
 				evalBRDF(L, V, N, diffuseColor, outColor);
-				outIntensity.add(outColor.mul(light.intensity).mul(cos).mul(lRec.attenuation).div(lRec.probability));
+				Vector3d intensity = light.intensity.clone();
+				
+				// extension : SpotLight
+				if (light instanceof SpotLight) {
+					Vector3d lDir = ((SpotLight) light).direction.clone().normalize();
+					double thetaF = ((SpotLight) light).falloffAngle;
+					double thetaB = ((SpotLight) light).beamAngle;
+					double angle = Math.acos(lRec.direction.clone().normalize().negate().dot(lDir));
+					double ratio = 1d;
+					if (angle <= thetaB) ratio = 1d;
+					else if(angle <= thetaF) ratio = -(angle - thetaF) / (thetaF - thetaB);
+					else ratio = 0;
+					intensity.mul(ratio);
+				}
+				
+				outIntensity.add(outColor.mul(intensity).mul(cos).mul(lRec.attenuation).div(lRec.probability));
 			}
 		}
 

@@ -1,3 +1,6 @@
+# why using this as demo?
+This is a very comprehensive project with very good system design and uses improved algorithm to reduce runtime complexity and implements advanced graphics effect.
+
 # advancedRaytracer
 To load this project on your local machine with Eclipse, go to File -> New -> Java Project. Then uncheck Use default location and set your Location to your path to this repository folder on your local machine (e.g. /path/to/advancedRaytracer).
 
